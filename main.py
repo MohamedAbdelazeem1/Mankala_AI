@@ -81,7 +81,7 @@ def apply_min_max_algorithm(tree, player):
     traverse the tree, apply min max algorithm and return the next step
     :param player:
     :param tree:
-    :return: new tree after updating the min_max variable
+    :return: new state after updating the min_max variable
     """
     pass
 
