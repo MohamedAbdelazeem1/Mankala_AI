@@ -143,6 +143,7 @@ def AI_play(current_state):
     """
     tree = calculate_tree(current_state, 7)
     tree = min_max(tree)
+    print(f'playing: {tree[1]["pocket_selected"]}')
     return do_step(current_state, tree[1]['pocket_selected'])
 
 

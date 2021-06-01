@@ -1,12 +1,30 @@
 # -*- coding: utf-8 -*-
 
+import main
 
 from os import stat_result
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
+import json
+
+
 class Ui_MainWindow(QtWidgets.QMainWindow):
+    def __init__(self, main_window):
+        super().__init__()
+        self.game_state = {
+            "player": 0,
+            "score": 0,
+            "is_stealing": 0,
+            "mancala_state": [4, 4, 4, 4, 4, 4, 0,
+                              4, 4, 4, 4, 4, 4, 0],
+            "steps": []
+        }
+        self.setupUi(main_window)
+        self.set_game_state()
+
     def setupUi(self, MainWindow):
+
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(867, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -208,25 +226,33 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         ################functions ###################
 
-    def pkt1(self):
+    def play(self, pocket_number=-1):
+        if self.game_state['player'] == 1 and pocket_number >= 0:
+            new_state = main.do_step(self.game_state, pocket_number)
+            if new_state is not None:
+                self.game_state = new_state
+                self.set_game_state()
+        elif self.game_state['player'] == 0:
+            self.game_state = main.AI_play(self.game_state)
+            self.set_game_state()
 
-        print(self.is_stealing())
-        pass
+    def pkt1(self):
+        self.play(0)
 
     def pkt2(self):
-        pass
+        self.play(1)
 
     def pkt3(self):
-        pass
+        self.play(2)
 
     def pkt4(self):
-        pass
+        self.play(3)
 
     def pkt5(self):
-        pass
+        self.play(4)
 
     def pkt6(self):
-        pass
+        self.play(5)
 
     def pkt7(self):
         pass
@@ -253,13 +279,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         pass
 
     def load(self):
-
-        state = self.load_state_file()
-
-        self.set_game_state(state)
-
+        self.load_state_file()
+        self.set_game_state()
         # self.stealing_lb.setCheckable(False)
-        pass
 
     def start(self):
         pass
@@ -284,105 +306,100 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         file_state.close()
 
     def load_state_file(self):
-        import json
-        # import os
-        # cwd = str.format(os.getcwd())
+        try:
+            with open('save.json', 'r') as f:
+                self.game_state = json.load(f)
+        except Exception as e:
+            print(f'error while loading save.json, with error: {e}')
 
-        # file_state= open( cwd + "\save.josn",'r')
-        file_state = open(r"E:\4th computer\2nd_term\AI\project\save.json", 'r')
+    def set_game_state(self):
 
-        state = file_state.readlines()
-        file_state.close()
+        self.pocket1.setText(str(self.game_state['mancala_state'][7]))
+        self.pocket2.setText(str(self.game_state['mancala_state'][8]))
+        self.pocket3.setText(str(self.game_state['mancala_state'][9]))
+        self.pocket4.setText(str(self.game_state['mancala_state'][10]))
+        self.pocket5.setText(str(self.game_state['mancala_state'][11]))
+        self.pocket6.setText(str(self.game_state['mancala_state'][12]))
+        self.mankla1.setText(str(self.game_state['mancala_state'][13]))
 
-        # list to dictionery
-        return json.loads(state[0])
-        # return state
+        self.pocket7.setText(str(self.game_state['mancala_state'][0]))
+        self.pocket8.setText(str(self.game_state['mancala_state'][1]))
+        self.pocket9.setText(str(self.game_state['mancala_state'][2]))
+        self.pocket10.setText(str(self.game_state['mancala_state'][3]))
+        self.pocket11.setText(str(self.game_state['mancala_state'][4]))
+        self.pocket12.setText(str(self.game_state['mancala_state'][5]))
+        self.mankla2.setText(str(self.game_state['mancala_state'][6]))
 
-    def set_game_state(self, game_state):
-
-        self.pocket1.setText(str(game_state['mancala_state'][0]))
-        self.pocket2.setText(str(game_state['mancala_state'][1]))
-        self.pocket3.setText(str(game_state['mancala_state'][2]))
-        self.pocket4.setText(str(game_state['mancala_state'][3]))
-        self.pocket5.setText(str(game_state['mancala_state'][4]))
-        self.pocket6.setText(str(game_state['mancala_state'][5]))
-        self.mankla1.setText(str(game_state['mancala_state'][6]))
-
-        self.pocket7.setText(str(game_state['mancala_state'][7]))
-        self.pocket8.setText(str(game_state['mancala_state'][8]))
-        self.pocket9.setText(str(game_state['mancala_state'][9]))
-        self.pocket10.setText(str(game_state['mancala_state'][10]))
-        self.pocket11.setText(str(game_state['mancala_state'][11]))
-        self.pocket12.setText(str(game_state['mancala_state'][12]))
-        self.mankla2.setText(str(game_state['mancala_state'][13]))
-
-        if game_state['stealing'] is True:
+        if self.game_state['is_stealing'] is True:
             # self.stealing_lb.setChecked(True)
             self.stealing_lb.nextCheckState()
             # self.stealing_lb.setCheckable(False)
         else:
             # self.stealing_lb.setChecked(False)
             self.stealing_lb.nextCheckState()
+        QtWidgets.QApplication.processEvents()
+        self.play()
+        # for i in range(6):
+        #     self.pocket+(i+1).setText(self.game_state['mancala_state'][i])
 
         # for i in range(6):
-        #     self.pocket+(i+1).setText(game_state['mancala_state'][i])
-
-        # for i in range(6):
-        #     self.pocket+(i+7).setText(game_state['mancala_state'][i+7])
+        #     self.pocket+(i+7).setText(self.game_state['mancala_state'][i+7])
 
     def get_game_state(self):
 
         import json
 
-        # file_state= open("save.json",'w+')
-        file_state = open(r"E:\4th computer\2nd_term\AI\project\save.json", 'r')
-
-        prev_state = file_state.read()
-        print(prev_state)
-
-        # list to dictionery
-        ps = json.loads(prev_state)
-        print(ps)
-
-        ps['mancala_state'].clear()
-        print(ps['mancala_state'])
-
-        ps['mancala_state'].append(self.pocket1.text())
-        ps['mancala_state'].append(self.pocket2.text())
-        ps['mancala_state'].append(self.pocket3.text())
-        ps['mancala_state'].append(self.pocket4.text())
-        ps['mancala_state'].append(self.pocket5.text())
-        ps['mancala_state'].append(self.pocket6.text())
-        ps['mancala_state'].append(self.mankla1.text())
-        ps['mancala_state'].append(self.pocket7.text())
-        ps['mancala_state'].append(self.pocket8.text())
-        ps['mancala_state'].append(self.pocket9.text())
-        ps['mancala_state'].append(self.pocket10.text())
-        ps['mancala_state'].append(self.pocket11.text())
-        ps['mancala_state'].append(self.pocket12.text())
-        ps['mancala_state'].append(self.mankla2.text())
-
-        print(ps)
-        ps['stealing'] = self.is_stealing()
-        ps2 = json.dumps(ps).replace("'", '"')
-
-        file_state.close()
-
-        file_state = open(r"E:\4th computer\2nd_term\AI\project\save.json", 'w')
-
-        # convert dic to list 
-        # list=[]
-        # temp=[]
-
-        # for key, value in ps.items():
-        #     temp = [key,value]
-        #     list.append(temp)
-
-        print(ps2)
-        file_state.writelines(ps2)
-        file_state.close()
-
-        # return mankala_state
+        with open('save.json', 'w') as f:
+            json.dump(self.game_state, f, indent=4)
+        # # file_state= open("save.json",'w+')
+        # file_state = open(r"E:\4th computer\2nd_term\AI\project\save.json", 'r')
+        #
+        # prev_state = file_state.read()
+        # print(prev_state)
+        #
+        # # list to dictionery
+        # ps = json.loads(prev_state)
+        # print(ps)
+        #
+        # ps['mancala_state'].clear()
+        # print(ps['mancala_state'])
+        #
+        # ps['mancala_state'].append(self.pocket1.text())
+        # ps['mancala_state'].append(self.pocket2.text())
+        # ps['mancala_state'].append(self.pocket3.text())
+        # ps['mancala_state'].append(self.pocket4.text())
+        # ps['mancala_state'].append(self.pocket5.text())
+        # ps['mancala_state'].append(self.pocket6.text())
+        # ps['mancala_state'].append(self.mankla1.text())
+        # ps['mancala_state'].append(self.pocket7.text())
+        # ps['mancala_state'].append(self.pocket8.text())
+        # ps['mancala_state'].append(self.pocket9.text())
+        # ps['mancala_state'].append(self.pocket10.text())
+        # ps['mancala_state'].append(self.pocket11.text())
+        # ps['mancala_state'].append(self.pocket12.text())
+        # ps['mancala_state'].append(self.mankla2.text())
+        #
+        # print(ps)
+        # ps['stealing'] = self.is_stealing()
+        # ps2 = json.dumps(ps).replace("'", '"')
+        #
+        # file_state.close()
+        #
+        # file_state = open(r"E:\4th computer\2nd_term\AI\project\save.json", 'w')
+        #
+        # # convert dic to list
+        # # list=[]
+        # # temp=[]
+        #
+        # # for key, value in ps.items():
+        # #     temp = [key,value]
+        # #     list.append(temp)
+        #
+        # print(ps2)
+        # file_state.writelines(ps2)
+        # file_state.close()
+        #
+        # # return mankala_state
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -414,7 +431,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui = Ui_MainWindow(MainWindow)
+    # ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
