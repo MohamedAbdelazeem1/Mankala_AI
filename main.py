@@ -28,18 +28,22 @@ def do_step(current_state, pocket_number):
         start_index = pocket_number + 7
 
     n_stones = current_state['mancala_state'][start_index]
-    current_state['mancala_state'][start_index] = 0
     if n_stones == 0:
         # empty pocket
         return None
+    current_state['mancala_state'][start_index] = 0
     for i in range(n_stones):
         start_index += 1
         if (current_state['player'] == 0 and start_index == 13) or (current_state['player'] == 1 and start_index == 6):
             # skip other player mancalas
             start_index += 1
-        if start_index > 13:
-            start_index = 0
+        start_index = start_index % len(current_state['mancala_state'])
+
         current_state['mancala_state'][start_index] += 1
+
+    # TODO: handle when the game is finished
+
+    ###
     if start_index != 6 and start_index != 13:
         current_state['player'] = (current_state['player'] + 1) % 2
     current_state['pocket_selected'] = pocket_number
@@ -86,6 +90,7 @@ def calculate_tree(current_state, depth):
         return current_state
     # print(depth)
     output_state = deepcopy(current_state)
+
     for i in range(6):
         new_state = do_step(current_state, i)
         if new_state is not None:
@@ -142,9 +147,12 @@ def AI_play(current_state):
     }
     """
     tree = calculate_tree(current_state, 7)
-    tree = min_max(tree)
-    print(f'playing: {tree[1]["pocket_selected"]}')
-    return do_step(current_state, tree[1]['pocket_selected'])
+    min_max_output = min_max(tree)
+    try:
+        print(f'playing: {min_max_output[1]["pocket_selected"]}')
+    except Exception as e:
+        print(f'error {e}')
+    return do_step(current_state, min_max_output[1]['pocket_selected'])
 
 
 def winner(current_state):
@@ -182,19 +190,19 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-    # game_state = {
-    #     "player": 0,
-    #     "score": 0,
-    #     "is_stealing": 0,
-    #     'pocket_selected': -1,
-    #     "mancala_state": [4, 4, 4, 4, 4, 4, 0,
-    #                       4, 4, 4, 4, 4, 4, 0],
-    #     "steps": []
-    # }
-    #
-    # current_state = calculate_tree(deepcopy(game_state), 8)
-    # x = min_max(current_state)
-    # print(x)
-    # with open('state.json', 'w') as f:
-    #     json.dump(x, f, indent=4)
+    # main()
+    game_state = {
+        "player": 0,
+        "score": 0,
+        "is_stealing": 0,
+        'pocket_selected': -1,
+        "mancala_state": [4, 4, 4, 4, 4, 4, 0,
+                          4, 4, 4, 4, 4, 4, 0],
+        "steps": []
+    }
+
+    current_state = calculate_tree(deepcopy(game_state), 2)
+    x = min_max(current_state)
+    print(x)
+    with open('state.json', 'w') as f:
+        json.dump(x, f, indent=4)

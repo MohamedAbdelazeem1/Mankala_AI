@@ -13,7 +13,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def __init__(self, main_window):
         super().__init__()
         self.game_state = {
-            "player": 0,
+            "player": 1,
             "score": 0,
             "is_stealing": 0,
             "mancala_state": [4, 4, 4, 4, 4, 4, 0,
@@ -21,7 +21,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             "steps": []
         }
         self.setupUi(main_window)
-        self.set_game_state()
+        self.set_game_state(play=False)
 
     def setupUi(self, MainWindow):
 
@@ -232,6 +232,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             if new_state is not None:
                 self.game_state = new_state
                 self.set_game_state()
+                print('\n\n')
         elif self.game_state['player'] == 0:
             self.game_state = main.AI_play(self.game_state)
             self.set_game_state()
@@ -284,7 +285,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         # self.stealing_lb.setCheckable(False)
 
     def start(self):
-        pass
+        self.play()
 
     ######################### help functions #########################
     def is_stealing(self):
@@ -312,7 +313,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print(f'error while loading save.json, with error: {e}')
 
-    def set_game_state(self):
+    def set_game_state(self, play=True):
 
         self.pocket1.setText(str(self.game_state['mancala_state'][7]))
         self.pocket2.setText(str(self.game_state['mancala_state'][8]))
@@ -338,7 +339,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             # self.stealing_lb.setChecked(False)
             self.stealing_lb.nextCheckState()
         QtWidgets.QApplication.processEvents()
-        self.play()
+        if play:
+            self.play()
         # for i in range(6):
         #     self.pocket+(i+1).setText(self.game_state['mancala_state'][i])
 
