@@ -15,7 +15,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.game_state = {
             "player": 1,
             "score": 0,
-            "is_stealing": 0,
+            "is_stealing": 1,
             "mancala_state": [4, 4, 4, 4, 4, 4, 0,
                               4, 4, 4, 4, 4, 4, 0],
             "steps": []
