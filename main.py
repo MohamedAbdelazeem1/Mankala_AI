@@ -79,12 +79,15 @@ def do_step(current_state, pocket_number, is_stealing=False):
         current_state["end_game"] = 1
         for i in range(7,13):
             current_state['mancala_state'][i] = 0
+        return current_state
     
     elif (current_state['player'] == 1) & (sumArray(current_state['mancala_state'] , 7, 13) == 0):
         current_state['mancala_state'][6] = sumArray(current_state['mancala_state'] , 0 , 6) 
         current_state["end_game"] = 1
         for i in range(0,6):
             current_state['mancala_state'][i] = 0
+        return current_state
+
 
     if start_index != 6 and start_index != 13:
         current_state['player'] = (current_state['player'] + 1) % 2
