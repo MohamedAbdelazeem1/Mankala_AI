@@ -162,7 +162,16 @@ def winner(current_state):
     :param current_state:
     :return: 0 for player0, 1 for player1, None if the game is still running
     """
-    return None
+    for i in range(len(current_state['mancala_state'])):
+        if i == 6 or i == 13:
+            continue
+        elif(current_state['mancala_state'][i]) != 0:
+            return None
+
+    if current_state['mancala_state'][6] > current_state['mancala_state'][13]:
+        return 0
+    else:
+        return 1
 
 
 def main():
