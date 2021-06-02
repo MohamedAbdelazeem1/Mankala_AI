@@ -1,3 +1,13 @@
+import json
+from copy import deepcopy
+
+def sumArray(arr,start,end):
+    sumArr = 0
+    for i in range (start,end):
+        sumArr = sumArr + arr[i]
+    return sumArr
+
+
 def do_step(current_state, pocket_number, is_stealing=False):
     """
     Aya
@@ -23,60 +33,67 @@ def do_step(current_state, pocket_number, is_stealing=False):
     }
     """
 ##############know Number of balls
-    Noballs = 0 
-    new_state = current_state
-    mancala = 0 
-    if (pocket_number>6):
-        mancala = 1
+    n_stones = 0 
+    current_state = deepcopy(current_state)
+
+    if current_state['player'] == 0:
+        start_index = pocket_number
+    else:
+        start_index = pocket_number + 7
+
+    n_stones = current_state['mancala_state'][start_index]
+    
+    if n_stones == 0:
+        # empty pocket
+        return None
+
+    current_state['mancala_state'][start_index] = 0
+
+    for i in range(n_stones):
+        start_index += 1
+        if (current_state['player'] == 0 and start_index == 13) or (current_state['player'] == 1 and start_index == 6):
+            # skip other player mancalas
+            start_index += 1
+        start_index = start_index % len(current_state['mancala_state'])
+
+        current_state['mancala_state'][start_index] += 1
+
+###### finish game 
+    if current_state['player'] == 0 & sumArray(current_state['mancala_state'] , 0 , 6) == 0:
+        current_state['mancala_state'][13] = sumArray(current_state['mancala_state'] , 7 , 13) 
+        current_state["end_game"] = 1
+        for i in range(7,13):
+            current_state['mancala_state'][i] = 0
+        return current_state
+    
+    elif current_state['player'] == 1 & sumArray(current_state['mancala_state'] , 7, 13) == 0:
+        current_state['mancala_state'][6] = sumArray(current_state['mancala_state'] , 0 , 6) 
+        current_state["end_game"] = 1
+        for i in range(0,6):
+            current_state['mancala_state'][i] = 0
+        return current_state
 
 
-##start from 0 to 13
-    for i in range (len(current_state["mankala_state"])):
-        if (i == pocket_number):
-            Noballs = current_state["mankala_state"][i]
+    if start_index != 6 and start_index != 13:
+            current_state['player'] = (current_state['player'] + 1) % 2
+    current_state['pocket_selected'] = pocket_number
 
-    new_state["mankala_state"][pocket_number] = 0
+    return current_state
 
-    for i in range ( Noballs ):
-        if (((pocket_number + i + 1 ) == 6+(14*mancala)) & ( current_state["player"] == 1)):
-            i+=1
-            mancala+=1
-
-        elif (((pocket_number + i + 1) == 13+(14*mancala)) & ( current_state["player"] == 0)):
-            i+=1
-            mancala+=1
-
-        if (pocket_number + 1 + i  >=len(current_state["mankala_state"])):
-            new_state["mankala_state"][(pocket_number + 1 + i - len(current_state["mankala_state"]))] += 1
-            new_state["last_pocket"] = pocket_number + i + 1 - len(current_state["mankala_state"])
-        else:
-            new_state["mankala_state"][pocket_number + i + 1] += 1
-            new_state["last_pocket"] = pocket_number + i + 1
-
-    print (new_state["last_pocket"])
-##############change player from 1 to 0 or opps.. 
-    if current_state["player"] == 0 & new_state["last_pocket"] != 6 :
-        new_state["player"] = current_state["player"] + 1
-    elif current_state["player"] == 0 & new_state["last_pocket"] != 13 :
-        new_state["player"] = current_state["player"] - 1 
-    return new_state
 
 
 
 game_state = {
-    "player": 1 ,
+    "player": 0 ,
     "score": 2,
-    "mankala_state": [2,1,2,5,2,5,0,2,5,2,5,2,5,0],
+    "mancala_state": [0,0,0,0,0,0,3,2,5,2,3,2,5,0],
     "steps": [],
-    "last_pocket": 0
+    "last_pocket": 0,
+    "end_game": 0
 }
 # is_stealing = input('enter 1 for stealing mode')
 
-print(do_step(game_state, 8 ,True))
+print(do_step(game_state, 3 ,True))
 
-### تظبيط لعدد المرات الي بيدخل فيها ويround
-### tzbeet my7otsh fe el nos m3 player 1
-### in case the pocket = 0
-###
 
 
