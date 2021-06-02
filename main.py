@@ -253,7 +253,8 @@ if __name__ == '__main__':
         'pocket_selected': -1,
         "mancala_state": [4, 4, 4, 4, 4, 4, 0,
                           4, 4, 4, 4, 4, 4, 0],
-        "steps": []
+        "steps": [],
+        "end_game": 0
     }
 
     current_state = calculate_tree(deepcopy(game_state), 2)
