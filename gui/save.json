@@ -1,0 +1,23 @@
+{
+    "player": 1,
+    "score": 0,
+    "is_stealing": 0,
+    "mancala_state": [
+        4,
+        4,
+        0,
+        0,
+        6,
+        6,
+        2,
+        1,
+        6,
+        1,
+        6,
+        6,
+        5,
+        1
+    ],
+    "steps": [],
+    "pocket_selected": 3
+}
