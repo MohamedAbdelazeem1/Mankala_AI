@@ -32,7 +32,7 @@ def do_step(current_state, pocket_number, is_stealing=False):
         "mankala_state":[0, 5, 1, 2, 5, 0]
     }
     """
-##############know Number of balls
+# know Number of stones
     n_stones = 0 
     current_state = deepcopy(current_state)
 
@@ -42,7 +42,7 @@ def do_step(current_state, pocket_number, is_stealing=False):
         start_index = pocket_number + 7
 
     n_stones = current_state['mancala_state'][start_index]
-    
+
     if n_stones == 0:
         # empty pocket
         return None
@@ -57,25 +57,37 @@ def do_step(current_state, pocket_number, is_stealing=False):
         start_index = start_index % len(current_state['mancala_state'])
 
         current_state['mancala_state'][start_index] += 1
+    # current_state["last_pocket"] = start_index
 
-###### finish game 
-    if current_state['player'] == 0 & sumArray(current_state['mancala_state'] , 0 , 6) == 0:
+
+#### 0 -> 12 , 1 -> 11 , 2 -> 10 , 3 -> 9 , 4 -> 8 the relation is p1 = 2 * 6-p0 & p0 = p1- 2*(p1-6)
+#### start index is the last pocket 
+
+    if (is_stealing):
+        if (current_state['player'] == 0) & ( start_index < 6) & ( current_state['mancala_state'][ start_index] == 1) :
+            current_state['mancala_state'][6] = current_state['mancala_state'][6] + current_state['mancala_state'][(2*(6 -  start_index)) -  start_index]
+            current_state['mancala_state'][(2*(6 -  start_index)) +  start_index] = 0
+
+        elif (current_state['player'] == 1) & ( start_index > 6) & (current_state['mancala_state'][ start_index] == 1) :
+            current_state['mancala_state'][13] = current_state['mancala_state'][13] + current_state['mancala_state'][ start_index - (2*(  start_index - 6 ))]
+            current_state['mancala_state'][ start_index - (2*(start_index - 6 )) ] = 0
+            
+
+###### if the game finished
+    if( (current_state['player'] == 0) & (sumArray(current_state['mancala_state'] , 0 , 6) == 0)):
         current_state['mancala_state'][13] = sumArray(current_state['mancala_state'] , 7 , 13) 
         current_state["end_game"] = 1
         for i in range(7,13):
             current_state['mancala_state'][i] = 0
-        return current_state
     
-    elif current_state['player'] == 1 & sumArray(current_state['mancala_state'] , 7, 13) == 0:
+    elif (current_state['player'] == 1) & (sumArray(current_state['mancala_state'] , 7, 13) == 0):
         current_state['mancala_state'][6] = sumArray(current_state['mancala_state'] , 0 , 6) 
         current_state["end_game"] = 1
         for i in range(0,6):
             current_state['mancala_state'][i] = 0
-        return current_state
-
 
     if start_index != 6 and start_index != 13:
-            current_state['player'] = (current_state['player'] + 1) % 2
+        current_state['player'] = (current_state['player'] + 1) % 2
     current_state['pocket_selected'] = pocket_number
 
     return current_state
