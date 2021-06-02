@@ -65,12 +65,15 @@ def do_step(current_state, pocket_number, is_stealing=False):
 
     if (is_stealing):
         if (current_state['player'] == 0) & ( start_index < 6) & ( current_state['mancala_state'][ start_index] == 1) :
-            current_state['mancala_state'][6] = current_state['mancala_state'][6] + current_state['mancala_state'][(2*(6 -  start_index)) -  start_index]
+            current_state['mancala_state'][6] = current_state['mancala_state'][6] + current_state['mancala_state'][(2*(6 -  start_index)) -  start_index] + 1
             current_state['mancala_state'][(2*(6 -  start_index)) +  start_index] = 0
-
+            current_state['mancala_state'][ start_index ] = 0 
+        
         elif (current_state['player'] == 1) & ( start_index > 6) & (current_state['mancala_state'][ start_index] == 1) :
-            current_state['mancala_state'][13] = current_state['mancala_state'][13] + current_state['mancala_state'][ start_index - (2*(  start_index - 6 ))]
+            current_state['mancala_state'][13] = current_state['mancala_state'][13] + current_state['mancala_state'][ start_index - (2*(  start_index - 6 ))] + 1
             current_state['mancala_state'][ start_index - (2*(start_index - 6 )) ] = 0
+            current_state['mancala_state'][ start_index ] = 0 
+
             
 
 ###### if the game finished

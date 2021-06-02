@@ -43,7 +43,8 @@
                     4,
                     0
                 ],
-                "steps": []
+                "steps": [],
+                "end_game": 0
             },
             {
                 "player": 1,
@@ -66,7 +67,8 @@
                     4,
                     0
                 ],
-                "steps": []
+                "steps": [],
+                "end_game": 0
             },
             {
                 "player": 1,
@@ -89,7 +91,8 @@
                     4,
                     0
                 ],
-                "steps": []
+                "steps": [],
+                "end_game": 0
             },
             {
                 "player": 1,
@@ -112,7 +115,8 @@
                     4,
                     0
                 ],
-                "steps": []
+                "steps": [],
+                "end_game": 0
             },
             {
                 "player": 1,
@@ -135,8 +139,10 @@
                     4,
                     0
                 ],
-                "steps": []
+                "steps": [],
+                "end_game": 0
             }
-        ]
+        ],
+        "end_game": 0
     }
 ]
