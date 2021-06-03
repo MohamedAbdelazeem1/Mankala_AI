@@ -1,9 +1,23 @@
 {
-      "player": 0,
-      "score": 0,
-      "is_stealing": 0,
-  "pocket_selected": -1,
-      "mancala_state": [4, 4, 4, 4, 4, 4, 0,
-                        4, 4, 4, 4, 4, 4, 0],
-      "steps": []
+    "player": 1,
+    "score": 0,
+    "is_stealing": 1,
+    "mancala_state": [
+        5,
+        0,
+        2,
+        0,
+        0,
+        1,
+        7,
+        7,
+        1,
+        5,
+        3,
+        8,
+        7,
+        2
+    ],
+    "steps": [],
+    "pocket_selected": 4
 }
