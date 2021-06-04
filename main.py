@@ -9,6 +9,33 @@ def sumArray(arr, start, end):
     return sumArr
 
 
+def which_player(pocket_number):
+    if 0 <= pocket_number <= 5:
+        return 0
+    elif 7 <= pocket_number <= 12:
+        return 1
+
+def is_empty(current_state, current_player_start_index):
+    current_player_end_index = current_player_start_index + 6
+
+    other_player_start_index = (current_player_start_index + 7) % 14
+    other_player_end_index = (current_player_end_index + 7) % 14
+
+    is_empty = True
+    for i in range(current_player_start_index, current_player_end_index):
+        if current_state['mancala_state'][i] != 0:
+            is_empty = False
+            break
+
+    if is_empty:
+        for i in range(other_player_start_index, other_player_end_index):
+            current_state['mancala_state'][other_player_end_index] += current_state['mancala_state'][i]
+            current_state['mancala_state'][i] = 0
+    else:
+        return None
+    return current_state
+
+
 def do_step(current_state, pocket_number):
     """
     Aya
@@ -36,62 +63,55 @@ def do_step(current_state, pocket_number):
     current_state = deepcopy(current_state)
     is_stealing = current_state['is_stealing']
     if current_state['player'] == 0:
-        start_index = pocket_number
+        current_pocket_index = pocket_number
     else:
-        start_index = pocket_number + 7
+        current_pocket_index = pocket_number + 7
 
-    n_stones = current_state['mancala_state'][start_index]
+    n_stones = current_state['mancala_state'][current_pocket_index]
 
     if n_stones == 0:
         # empty pocket
         return None
 
-    current_state['mancala_state'][start_index] = 0
+    current_state['mancala_state'][current_pocket_index] = 0
 
     for i in range(n_stones):
-        start_index += 1
-        if (current_state['player'] == 0 and start_index == 13) or (current_state['player'] == 1 and start_index == 6):
+        current_pocket_index += 1
+        if (current_state['player'] == 0 and current_pocket_index == 13) or (
+                current_state['player'] == 1 and current_pocket_index == 6):
             # skip other player mancalas
-            start_index += 1
-        start_index = start_index % len(current_state['mancala_state'])
+            current_pocket_index += 1
+        current_pocket_index = current_pocket_index % len(current_state['mancala_state'])
 
-        current_state['mancala_state'][start_index] += 1
-    # current_state["last_pocket"] = start_index
+        current_state['mancala_state'][current_pocket_index] += 1
+    # current_state["last_pocket"] = current_pocket_index
 
     #### 0 -> 12 , 1 -> 11 , 2 -> 10 , 3 -> 9 , 4 -> 8 the relation is p1 = 2 * 6-p0 and p0 = p1- 2*(p1-6)
     #### start index is the last pocket
 
-    if (is_stealing):
-        if (current_state['player'] == 0) and (start_index < 6) and (current_state['mancala_state'][start_index] == 1):
-            print(f'player 0 is stealing')
-            current_state['mancala_state'][6] = current_state['mancala_state'][6] + current_state['mancala_state'][
-                (2 * (6 - start_index)) - start_index] +1
-            current_state['mancala_state'][(2 * (6 - start_index)) + start_index] = 0
-            current_state['mancala_state'][ start_index ] = 0 
+    if is_stealing and current_state['mancala_state'][current_pocket_index] == 1:
+        if current_pocket_index != 6 and current_pocket_index != 13 and which_player(current_pocket_index) == current_state['player']:
+            pocket_to_steal = abs(current_pocket_index - 12)
+            stolen_stones = current_state['mancala_state'][current_pocket_index] + current_state['mancala_state'][
+                pocket_to_steal]
+            if stolen_stones > 1:
+                current_state['mancala_state'][current_pocket_index] = 0
+                current_state['mancala_state'][pocket_to_steal] = 0
+                if current_state['player'] == 0:
+                    current_state['mancala_state'][6] += stolen_stones
+                else:
+                    current_state['mancala_state'][13] += stolen_stones
 
-        elif (current_state['player'] == 1) and (start_index > 6) and (current_state['mancala_state'][start_index] == 1):
-            print(f'player 1 is stealing')
-            current_state['mancala_state'][13] = current_state['mancala_state'][13] + current_state['mancala_state'][
-                start_index - (2 * (start_index - 6))] +1
-            current_state['mancala_state'][start_index - (2 * (start_index - 6))] = 0
-            current_state['mancala_state'][ start_index ] = 0 
+    player0_empty = is_empty(current_state, 0)
+    if player0_empty is None:
+        player1_empty = is_empty(current_state, 7)
 
-    ###### if the game finished
-    if ((current_state['player'] == 0) and (sumArray(current_state['mancala_state'], 0, 6) == 0)):
-        current_state['mancala_state'][13] = sumArray(current_state['mancala_state'], 7, 13)
-        current_state["end_game"] = 1
-        for i in range(7, 13):
-            current_state['mancala_state'][i] = 0
-        return current_state
+    if player0_empty is not None:
+        current_state = player0_empty
+    elif player1_empty is not None:
+        current_state = player1_empty
 
-    elif (current_state['player'] == 1) and (sumArray(current_state['mancala_state'], 7, 13) == 0):
-        current_state['mancala_state'][6] = sumArray(current_state['mancala_state'], 0, 6)
-        current_state["end_game"] = 1
-        for i in range(0, 6):
-            current_state['mancala_state'][i] = 0
-        return current_state
-
-    if start_index != 6 and start_index != 13:
+    if current_pocket_index != 6 and current_pocket_index != 13:
         current_state['player'] = (current_state['player'] + 1) % 2
     current_state['pocket_selected'] = pocket_number
 
@@ -180,7 +200,7 @@ def min_max(tree):
             return [min_value, tree["steps"][min_index]]
 
 
-def AI_play(current_state):
+def AI_play(current_state, depth=7):
     """
     Esraa
     1. calculate tree
@@ -194,7 +214,7 @@ def AI_play(current_state):
         "steps": []
     }
     """
-    tree = calculate_tree(current_state, 7)
+    tree = calculate_tree(current_state, depth)
     min_max_output = min_max(tree)
     try:
         print(f'playing: {min_max_output[1]["pocket_selected"]}')
