@@ -3,6 +3,7 @@
     "score": 0,
     "is_stealing": 1,
     "mancala_state": [
+<<<<<<< HEAD
         5,
         0,
         2,
@@ -20,4 +21,23 @@
     ],
     "steps": [],
     "pocket_selected": 4
+=======
+        1,
+        0,
+        9,
+        8,
+        6,
+        6,
+        1,
+        4,
+        4,
+        0,
+        5,
+        0,
+        0,
+        3
+    ],
+    "steps": [],
+    "pocket_selected": 5
+>>>>>>> 9acdc4b775c71abf38c176209119723896970293
 }

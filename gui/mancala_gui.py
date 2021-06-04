@@ -11,6 +11,7 @@ import json
 class Ui_MainWindow(QtWidgets.QMainWindow):
     def __init__(self, main_window):
         super().__init__()
+<<<<<<< HEAD
         self.game_state = {
             "player": 1,
             "score": 0,
@@ -19,8 +20,13 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                               4, 4, 4, 4, 4, 4, 0],
             "steps": []
         }
+=======
+>>>>>>> 9acdc4b775c71abf38c176209119723896970293
         self.setupUi(main_window)
-        self.set_game_state()
+        self.game_state = None
+        self.reset_game()
+
+        self.depth = 2
 
     def setupUi(self, MainWindow):
 
@@ -153,7 +159,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.mankla1.setFont(bt_font)
         self.mankla1.setObjectName("mankla1")
         self.mankla1.setStyleSheet(
+<<<<<<< HEAD
             "color: white;""background-color: grey;" )
+=======
+            "color: white;""background-color: grey;")
+>>>>>>> 9acdc4b775c71abf38c176209119723896970293
 
         self.mankla2 = QtWidgets.QPushButton(self.frame)
         self.mankla2.setGeometry(QtCore.QRect(20, 100, 75, 260))
@@ -194,20 +204,34 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.player2_lb.setObjectName("player2_lb")
 
         self.stealing_lb = QtWidgets.QRadioButton(self.bts_frame)
-        self.stealing_lb.setGeometry(QtCore.QRect(30, 40, 111, 31))
+        self.stealing_lb.setGeometry(QtCore.QRect(30, 5, 111, 31))
         self.stealing_lb.setFont(lb_font)
         self.stealing_lb.setObjectName("stealing_lb")
 
         # self.player_1st= QtWidgets.QRadioButton(self.bts_frame)
 
+<<<<<<< HEAD
 
 
         self.player_1st = QtWidgets.QCheckBox(self.bts_frame)
         self.player_1st.setGeometry(QtCore.QRect(30, 75, 160, 31))
+=======
+        self.player_1st = QtWidgets.QCheckBox(self.bts_frame)
+        self.player_1st.setGeometry(QtCore.QRect(30, 30, 160, 31))
+>>>>>>> 9acdc4b775c71abf38c176209119723896970293
         self.player_1st.setFont(lb_font)
         self.player_1st.setObjectName("player_1st")
         self.player_1st.setText("playing First")
 
+<<<<<<< HEAD
+=======
+        self.mode = QtWidgets.QComboBox(self.bts_frame)
+        self.mode.setGeometry(QtCore.QRect(30, 65, 160, 31))
+        self.mode.setFont(lb_font)
+        self.mode.setObjectName("mode")
+        self.mode.addItems(["Easy", "Medium", "Hard"])
+
+>>>>>>> 9acdc4b775c71abf38c176209119723896970293
         ######################   fonts  #########################
 
         MainWindow.setCentralWidget(self.centralwidget)
@@ -297,11 +321,16 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         else:
             self.game_state['is_stealing'] = 0
+<<<<<<< HEAD
+=======
+        print(self.game_state)
+>>>>>>> 9acdc4b775c71abf38c176209119723896970293
 
         # self.player_1st.setTriState()
         self.player_1st.setCheckable(self.player_1st.isChecked())
         self.start_bt.setStyleSheet("background-color: grey;")
 
+<<<<<<< HEAD
 
 
     ######################### help functions #########################
@@ -402,6 +431,123 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         return self.stealing_lb.isChecked()
 
 
+=======
+        ########## here take the text and select dipth #############
+        if self.mode.currentIndex() == 1:
+            self.depth = 5
+        elif self.mode.currentIndex() == 2:
+            self.depth = 8
+        else:
+            self.depth = 2
+
+    ######################### help functions #########################
+
+    def play(self, pocket_number=-1):
+        if self.game_state['player'] == 1 and pocket_number >= 0:
+            self.bt_color()
+            new_state = main.do_step(self.game_state, pocket_number)
+            if new_state is not None:
+                self.game_state = new_state
+                self.set_game_state()
+
+        elif self.game_state['player'] == 0:
+
+            self.clear_color()
+            # TODO: path depth depending on the game hardness
+            self.game_state = main.AI_play(self.game_state, self.depth)
+            self.set_game_state()
+            self.bt_color()
+            winner = main.winner(self.game_state)
+            if winner is not None:
+                # TODO: show popup window showing who is winner
+                self.reset_game()
+
+    def reset_game(self):
+        self.game_state = {
+            "player": 1,
+            "score": 0,
+            "is_stealing": 0,
+            "mancala_state": [4, 4, 4, 4, 4, 4, 0,
+                              4, 4, 4, 4, 4, 4, 0],
+            "steps": []
+        }
+        self.set_game_state()
+
+    def bt_color(self):
+
+        self.player1_lb.setStyleSheet("color: red;")
+        self.player2_lb.setStyleSheet("color: green;")
+
+        self.mankla1.setStyleSheet("color: white;""background-color: grey;" "border : 4px solid green")
+        self.mankla2.setStyleSheet("color: white;""background-color: grey;" "border : 4px solid white")
+
+        self.pocket1.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+        self.pocket2.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+        self.pocket3.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+        self.pocket4.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+        self.pocket5.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+        self.pocket6.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+
+        self.pocket7.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+        self.pocket8.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+        self.pocket9.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+        self.pocket10.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+        self.pocket11.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+        self.pocket12.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+
+        pass
+
+    def clear_color(self):
+        self.player1_lb.setStyleSheet("color: green;")
+        self.player2_lb.setStyleSheet("color: red;")
+
+        self.mankla2.setStyleSheet("color: white;""background-color: grey;" "border : 4px solid green")
+        self.mankla1.setStyleSheet("color: white;""background-color: grey;" "border : 4px solid white")
+
+        self.pocket1.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+        self.pocket2.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+        self.pocket3.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+        self.pocket4.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+        self.pocket5.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+        self.pocket6.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
+
+        self.pocket7.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+        self.pocket8.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+        self.pocket9.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+        self.pocket10.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+        self.pocket11.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+        self.pocket12.setStyleSheet(
+            "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
+
+        pass
+
+    def is_stealing(self):
+        # 1 if stealing   / 0  not stealing 
+        return self.stealing_lb.isChecked()
+>>>>>>> 9acdc4b775c71abf38c176209119723896970293
 
     def load_state_file(self):
         try:
@@ -494,7 +640,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         #
         # # return mankala_state
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9acdc4b775c71abf38c176209119723896970293
         # ##################### not used #############
         # def save_state_file(self, curent_state):
         #     import json
