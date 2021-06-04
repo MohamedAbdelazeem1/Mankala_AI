@@ -218,9 +218,10 @@ def AI_play(current_state, depth=7):
     min_max_output = min_max(tree)
     try:
         print(f'playing: {min_max_output[1]["pocket_selected"]}')
+        return do_step(current_state, min_max_output[1]['pocket_selected'])
     except Exception as e:
         print(f'error {e}')
-    return do_step(current_state, min_max_output[1]['pocket_selected'])
+        return current_state
 
 
 def winner(current_state):
@@ -238,8 +239,10 @@ def winner(current_state):
 
     if current_state['mancala_state'][6] > current_state['mancala_state'][13]:
         return 0
-    else:
+    elif current_state['mancala_state'][6] < current_state['mancala_state'][13]:
         return 1
+    else:
+        return 3
 
 
 def main():

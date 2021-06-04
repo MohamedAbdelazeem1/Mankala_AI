@@ -336,17 +336,15 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.game_state = main.AI_play(self.game_state, self.depth)
             self.set_game_state()
             self.bt_color()
-            winner = main.winner(self.game_state)
-            if winner is not None:
-                # TODO: show popup window showing who is winner
-                if self.game_state['player'] == 0:
-
-                    self.msg.setText("Player 2 is Winner ")
-                else:
-                    self.msg.setText("Player 1 is Winner ")
-
-                x = self.msg.exec_()
-                self.reset_game()
+        # winner = main.winner(self.game_state)
+        # if winner is not None:
+        #     if self.game_state['player'] == 0:
+        #
+        #         self.msg.setText("Player 2 is Winner ")
+        #     else:
+        #         self.msg.setText("Player 1 is Winner ")
+        #         self.msg.exec_()
+        #     self.reset_game()
 
     def reset_game(self):
         self.game_state = {
@@ -467,7 +465,19 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             # self.stealing_lb.setChecked(False)
             self.stealing_lb.nextCheckState()
         QtWidgets.QApplication.processEvents()
-        self.play()
+        winner = main.winner(self.game_state)
+        if winner is None:
+            self.play()
+        else:
+            if winner == 0:
+
+                self.msg.setText("Player 2 is Winner ")
+            elif winner == 1:
+                self.msg.setText("Player 1 is Winner ")
+            else:
+                self.msg.setText("It's a tie")
+            self.msg.exec_()
+            self.reset_game()
 
     def get_game_state(self):
 
