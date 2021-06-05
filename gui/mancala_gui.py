@@ -24,6 +24,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         MainWindow.setStyleSheet("color: white;""background-color: #222840;")
+        MainWindow.setWindowIcon(QtGui.QIcon('mancala_logo2.png'))
 
         ###########################  frames ###########################
 
@@ -59,12 +60,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pocket1.setDefault(False)
         self.pocket1.setFlat(False)
         self.pocket1.setObjectName("pocket1")
-
         self.pocket1.setStyleSheet(
             "color: white;""background-color: grey;""border-radius : 30px; border : 3px solid white")
 
-        # self.pocket1.setStyleSheet(
-        #     "color: white;""background-color: grey;""border-radius : 30px; border : 2px solid white")
 
         self.pocket2 = QtWidgets.QPushButton(self.frame)
         self.pocket2.setGeometry(QtCore.QRect(220, 340, 60, 60))
@@ -148,14 +146,14 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.mankla1.setFont(bt_font)
         self.mankla1.setObjectName("mankla1")
         self.mankla1.setStyleSheet(
-            "color: white;""background-color: grey;")
+            "color: white;""background-color: grey;""border-radius: 35px;")
 
         self.mankla2 = QtWidgets.QPushButton(self.frame)
         self.mankla2.setGeometry(QtCore.QRect(20, 100, 75, 260))
         self.mankla2.setFont(bt_font)
         self.mankla2.setObjectName("mankla2")
         self.mankla2.setStyleSheet(
-            "color: white;""background-color: grey;")
+            "color: white;""background-color: grey;""border-radius: 35px;")
 
         ##############  start / save /load  ##########
 
@@ -193,8 +191,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.stealing_lb.setFont(lb_font)
         self.stealing_lb.setObjectName("stealing_lb")
 
-        # self.player_1st= QtWidgets.QRadioButton(self.bts_frame)
-
         self.player_1st = QtWidgets.QCheckBox(self.bts_frame)
         self.player_1st.setGeometry(QtCore.QRect(30, 30, 160, 31))
         self.player_1st.setFont(lb_font)
@@ -210,10 +206,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         self.msg = QtWidgets.QMessageBox()
         self.msg.setWindowTitle("Winner Player")
-
-        # self.msg.setText(" Player 1 is Winner    ")
-        # x = self.msg.exec_()
-
+        self.msg.setWindowIcon(QtGui.QIcon('winner.jpg'))
+        self.msg.setIconPixmap(QtGui.QPixmap('winner2.jpg'))
 
 
         ######################   fonts  #########################
@@ -284,15 +278,15 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         pass
 
     def save(self):
-        # self.save_state_file(self.get_game_state())
+
         self.get_game_state()
-        # print(self.get_game_state())
+
         pass
 
     def load(self):
         self.load_state_file()
         self.set_game_state()
-        # self.stealing_lb.setCheckable(False)
+
 
     def start(self):
         if self.player_1st.isChecked():
@@ -308,7 +302,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         print(self.game_state)
 
         # self.player_1st.setTriState()
-        self.player_1st.setCheckable(self.player_1st.isChecked())
+        # self.player_1st.setCheckable()
         self.start_bt.setStyleSheet("background-color: grey;")
 
         ########## here take the text and select dipth #############
@@ -336,15 +330,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.game_state = main.AI_play(self.game_state, self.depth)
             self.set_game_state()
             self.bt_color()
-        # winner = main.winner(self.game_state)
-        # if winner is not None:
-        #     if self.game_state['player'] == 0:
-        #
-        #         self.msg.setText("Player 2 is Winner ")
-        #     else:
-        #         self.msg.setText("Player 1 is Winner ")
-        #         self.msg.exec_()
-        #     self.reset_game()
 
     def reset_game(self):
         self.game_state = {
@@ -362,8 +347,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.player1_lb.setStyleSheet("color: red;")
         self.player2_lb.setStyleSheet("color: green;")
 
-        self.mankla1.setStyleSheet("color: white;""background-color: grey;" "border : 4px solid green")
-        self.mankla2.setStyleSheet("color: white;""background-color: grey;" "border : 4px solid white")
+        self.mankla1.setStyleSheet("color: white;""background-color: grey;" "border-radius: 35px; border : 4px solid green")
+        self.mankla2.setStyleSheet("color: white;""background-color: grey;" "border-radius: 35px; border : 4px solid white")
 
         self.pocket1.setStyleSheet(
             "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
@@ -397,8 +382,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.player1_lb.setStyleSheet("color: green;")
         self.player2_lb.setStyleSheet("color: red;")
 
-        self.mankla2.setStyleSheet("color: white;""background-color: grey;" "border : 4px solid green")
-        self.mankla1.setStyleSheet("color: white;""background-color: grey;" "border : 4px solid white")
+        self.mankla2.setStyleSheet("color: white;""background-color: grey;" "border-radius: 35px; border : 4px solid green")
+        self.mankla1.setStyleSheet("color: white;""background-color: grey;" " border-radius: 35px; border : 4px solid white")
 
         self.pocket1.setStyleSheet(
             "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
@@ -426,7 +411,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pocket12.setStyleSheet(
             "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
 
-        pass
 
     def is_stealing(self):
         # 1 if stealing   / 0  not stealing
@@ -471,9 +455,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         else:
             if winner == 0:
 
-                self.msg.setText("Player 2 is Winner ")
+                self.msg.setText("\n\n\nPlayer 2 is Winner ")
             elif winner == 1:
-                self.msg.setText("Player 1 is Winner ")
+                self.msg.setText("\n\n\nPlayer 1 is Winner ")
             else:
                 self.msg.setText("It's a tie")
             self.msg.exec_()
@@ -485,71 +469,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         with open('save.json', 'w') as f:
             json.dump(self.game_state, f, indent=4)
-        # # file_state= open("save.json",'w+')
-        # file_state = open(r"E:\4th computer\2nd_term\AI\project\save.json", 'r')
-        #
-        # prev_state = file_state.read()
-        # print(prev_state)
-        #
-        # # list to dictionery
-        # ps = json.loads(prev_state)
-        # print(ps)
-        #
-        # ps['mancala_state'].clear()
-        # print(ps['mancala_state'])
-        #
-        # ps['mancala_state'].append(self.pocket1.text())
-        # ps['mancala_state'].append(self.pocket2.text())
-        # ps['mancala_state'].append(self.pocket3.text())
-        # ps['mancala_state'].append(self.pocket4.text())
-        # ps['mancala_state'].append(self.pocket5.text())
-        # ps['mancala_state'].append(self.pocket6.text())
-        # ps['mancala_state'].append(self.mankla1.text())
-        # ps['mancala_state'].append(self.pocket7.text())
-        # ps['mancala_state'].append(self.pocket8.text())
-        # ps['mancala_state'].append(self.pocket9.text())
-        # ps['mancala_state'].append(self.pocket10.text())
-        # ps['mancala_state'].append(self.pocket11.text())
-        # ps['mancala_state'].append(self.pocket12.text())
-        # ps['mancala_state'].append(self.mankla2.text())
-        #
-        # print(ps)
-        # ps['stealing'] = self.is_stealing()
-        # ps2 = json.dumps(ps).replace("'", '"')
-        #
-        # file_state.close()
-        #
-        # file_state = open(r"E:\4th computer\2nd_term\AI\project\save.json", 'w')
-        #
-        # # convert dic to list
-        # # list=[]
-        # # temp=[]
-        #
-        # # for key, value in ps.items():
-        # #     temp = [key,value]
-        # #     list.append(temp)
-        #
-        # print(ps2)
-        # file_state.writelines(ps2)
-        # file_state.close()
-        #
-        # # return mankala_state
-
-        # ##################### not used #############
-        # def save_state_file(self, curent_state):
-        #     import json
-        #
-        #     # file_state= open("save.json",'w+')
-        #     file_state = open(r"E:\4th computer\2nd_term\AI\project\save.json", 'w+')
-        #
-        #     prev_state = file_state.readlines()
-        #     ps = json.loads(prev_state[0])
-        #     file_state.writelines(curent_state)
-        #     file_state.close()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Mancala "))
         self.pocket2.setText(_translate("MainWindow", "4"))
         self.pocket4.setText(_translate("MainWindow", "4"))
         self.pocket3.setText(_translate("MainWindow", "4"))
