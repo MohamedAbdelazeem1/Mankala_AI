@@ -63,7 +63,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pocket1.setStyleSheet(
             "color: white;""background-color: grey;""border-radius : 30px; border : 3px solid white")
 
-
         self.pocket2 = QtWidgets.QPushButton(self.frame)
         self.pocket2.setGeometry(QtCore.QRect(220, 340, 60, 60))
         self.pocket2.setFont(bt_font)
@@ -155,6 +154,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.mankla2.setStyleSheet(
             "color: white;""background-color: grey;""border-radius: 35px;")
 
+
         ##############  start / save /load  ##########
 
         self.start_bt = QtWidgets.QPushButton(self.bts_frame)
@@ -195,7 +195,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.player_1st.setGeometry(QtCore.QRect(30, 30, 160, 31))
         self.player_1st.setFont(lb_font)
         self.player_1st.setObjectName("player_1st")
-        self.player_1st.setText("playing First")
+        self.player_1st.setText("Play First")
 
         self.mode = QtWidgets.QComboBox(self.bts_frame)
         self.mode.setGeometry(QtCore.QRect(30, 65, 160, 31))
@@ -203,12 +203,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.mode.setObjectName("mode")
         self.mode.addItems(["Easy", "Medium", "Hard"])
 
-
         self.msg = QtWidgets.QMessageBox()
         self.msg.setWindowTitle("Winner Player")
         self.msg.setWindowIcon(QtGui.QIcon('winner.jpg'))
         self.msg.setIconPixmap(QtGui.QPixmap('winner2.jpg'))
-
 
         ######################   fonts  #########################
 
@@ -240,6 +238,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         ################functions ###################
+        self.disable_bts()
 
     def pkt1(self):
         self.play(0)
@@ -287,7 +286,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.load_state_file()
         self.set_game_state()
 
-
     def start(self):
         if self.player_1st.isChecked():
             self.game_state['player'] = 1
@@ -305,7 +303,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         # self.player_1st.setCheckable()
         self.start_bt.setStyleSheet("background-color: grey;")
 
-        ########## here take the text and select dipth #############
+        ########## here take the text and select depth #############
         if self.mode.currentIndex() == 1:
             self.depth = 5
         elif self.mode.currentIndex() == 2:
@@ -313,7 +311,36 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         else:
             self.depth = 2
 
+        if self.game_state['player'] == 0:
+            self.play(-1)
+
+        self.enable_bts()
+
     ######################### help functions #########################
+
+    def enable_bts(self):
+        self.pocket1.setEnabled(True)
+        self.pocket2.setEnabled(True)
+        self.pocket3.setEnabled(True)
+        self.pocket4.setEnabled(True)
+        self.pocket5.setEnabled(True)
+        self.pocket6.setEnabled(True)
+
+        self.player_1st.setEnabled(False)
+        self.mode.setEnabled(False)
+        self.stealing_lb.setEnabled(False)
+
+    def disable_bts(self):
+        self.pocket1.setEnabled(False)
+        self.pocket2.setEnabled(False)
+        self.pocket3.setEnabled(False)
+        self.pocket4.setEnabled(False)
+        self.pocket5.setEnabled(False)
+        self.pocket6.setEnabled(False)
+
+        self.player_1st.setEnabled(True)
+        self.mode.setEnabled(True)
+        self.stealing_lb.setEnabled(True)
 
     def play(self, pocket_number=-1):
         if self.game_state['player'] == 1 and pocket_number >= 0:
@@ -341,14 +368,17 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             "steps": []
         }
         self.set_game_state()
+        self.disable_bts()
 
     def bt_color(self):
 
         self.player1_lb.setStyleSheet("color: red;")
         self.player2_lb.setStyleSheet("color: green;")
 
-        self.mankla1.setStyleSheet("color: white;""background-color: grey;" "border-radius: 35px; border : 4px solid green")
-        self.mankla2.setStyleSheet("color: white;""background-color: grey;" "border-radius: 35px; border : 4px solid white")
+        self.mankla1.setStyleSheet(
+            "color: white;""background-color: grey;" "border-radius: 35px; border : 4px solid green")
+        self.mankla2.setStyleSheet(
+            "color: white;""background-color: grey;" "border-radius: 35px; border : 4px solid white")
 
         self.pocket1.setStyleSheet(
             "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
@@ -382,8 +412,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.player1_lb.setStyleSheet("color: green;")
         self.player2_lb.setStyleSheet("color: red;")
 
-        self.mankla2.setStyleSheet("color: white;""background-color: grey;" "border-radius: 35px; border : 4px solid green")
-        self.mankla1.setStyleSheet("color: white;""background-color: grey;" " border-radius: 35px; border : 4px solid white")
+        self.mankla2.setStyleSheet(
+            "color: white;""background-color: grey;" "border-radius: 35px; border : 4px solid green")
+        self.mankla1.setStyleSheet(
+            "color: white;""background-color: grey;" " border-radius: 35px; border : 4px solid white")
 
         self.pocket1.setStyleSheet(
             "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid white")
@@ -410,7 +442,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
         self.pocket12.setStyleSheet(
             "color: white;""background-color: grey;""border-radius : 30px; border : 4px solid green")
-
 
     def is_stealing(self):
         # 1 if stealing   / 0  not stealing
