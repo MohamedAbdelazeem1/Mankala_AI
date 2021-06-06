@@ -3,7 +3,7 @@
     "score": 0,
     "is_stealing": 1,
     "mancala_state": [
-        0, 0, 0, 3, 1, 0, 20, 0, 0, 0, 3, 1, 0, 20
+        5, 0, 0, 3, 1, 0, 20, 0, 0, 0, 3, 1, 0, 20
     ],
     "steps": [],
     "pocket_selected": 5

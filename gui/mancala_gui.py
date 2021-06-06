@@ -312,7 +312,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.depth = 2
 
         if self.game_state['player'] == 0:
-            self.play(-1)
+            self.play()
 
         self.enable_bts()
 
@@ -351,7 +351,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 self.set_game_state()
 
         elif self.game_state['player'] == 0:
-
             self.clear_color()
             # TODO: path depth depending on the game hardness
             self.game_state = main.AI_play(self.game_state, self.depth)
@@ -473,11 +472,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.mankla2.setText(str(self.game_state['mancala_state'][6]))
 
         if self.game_state['is_stealing'] is True:
-            # self.stealing_lb.setChecked(True)
+            self.stealing_lb.setChecked(True)
             self.stealing_lb.nextCheckState()
             # self.stealing_lb.setCheckable(False)
         else:
-            # self.stealing_lb.setChecked(False)
+            self.stealing_lb.setChecked(False)
             self.stealing_lb.nextCheckState()
         QtWidgets.QApplication.processEvents()
         winner = main.winner(self.game_state)
