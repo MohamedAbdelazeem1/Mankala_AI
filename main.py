@@ -1,14 +1,6 @@
 import json
 from copy import deepcopy
 
-
-def sumArray(arr, start, end):
-    sumArr = 0
-    for i in range(start, end):
-        sumArr = sumArr + arr[i]
-    return sumArr
-
-
 def which_player(pocket_number):
     if 0 <= pocket_number <= 5:
         return 0
@@ -84,10 +76,7 @@ def do_step(current_state, pocket_number):
         current_pocket_index = current_pocket_index % len(current_state['mancala_state'])
 
         current_state['mancala_state'][current_pocket_index] += 1
-    # current_state["last_pocket"] = current_pocket_index
 
-    #### 0 -> 12 , 1 -> 11 , 2 -> 10 , 3 -> 9 , 4 -> 8 the relation is p1 = 2 * 6-p0 and p0 = p1- 2*(p1-6)
-    #### start index is the last pocket
 
     if is_stealing and current_state['mancala_state'][current_pocket_index] == 1:
         if current_pocket_index != 6 and current_pocket_index != 13 and which_player(current_pocket_index) == current_state['player']:
@@ -156,7 +145,6 @@ def calculate_tree(current_state, depth):
     """
     if depth == 0:
         return current_state
-    # print(depth)
     output_state = deepcopy(current_state)
 
     for i in range(6):
@@ -168,7 +156,11 @@ def calculate_tree(current_state, depth):
     return output_state
 
 
-def apply_min_max_algorithm(tree, player):
+def get_heoristic_value(tree):
+    return (2 * tree["mancala_state"][6] - tree["mancala_state"][6 + 7])
+
+
+def min_max(tree):
     """
     khwas
     traverse the tree, apply min max algorithm and return the next step
@@ -176,14 +168,6 @@ def apply_min_max_algorithm(tree, player):
     :param tree:
     :return: new state after updating the min_max variable
     """
-    pass
-
-
-def get_heoristic_value(tree):
-    return (2 * tree["mancala_state"][6] - tree["mancala_state"][6 + 7])
-
-
-def min_max(tree):
     if tree["steps"] == []:
         return [get_heoristic_value(tree), tree["mancala_state"]]
     else:
@@ -256,10 +240,7 @@ def main():
     }
 
     while winner(game_state) is None:
-        print(f"\n\nAI mancala: {game_state['mancala_state'][:7]}")
-        print(f"your mancala: {game_state['mancala_state'][7:]}")
         if game_state['player'] == 1:
-            # read user input:
             user_input = int(input('Enter number from 0 to 5: '))
             new_state = do_step(game_state, user_input)
             if new_state is not None:
@@ -284,6 +265,5 @@ if __name__ == '__main__':
 
     current_state = calculate_tree(deepcopy(game_state), 2)
     x = min_max(current_state)
-    print(x)
     with open('state.json', 'w') as f:
         json.dump(x, f, indent=4)

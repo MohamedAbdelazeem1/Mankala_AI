@@ -10,6 +10,7 @@ in this project we implement the mancala game with all its rules , the game allo
 ```markdown
  pip install -r requirements.txt
 ```
+Then run mancala_gui.py in gui folder
 
 ## our modules in our app:
 - Python

@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import main
+import json
 
 from os import stat_result
 from PyQt5 import QtCore, QtGui, QtWidgets
-
-import json
 
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
@@ -531,6 +529,5 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow(MainWindow)
-    # ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
