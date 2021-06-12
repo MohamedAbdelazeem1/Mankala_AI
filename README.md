@@ -18,4 +18,4 @@ in this project we implement the mancala game with all its rules , the game allo
 - json 
 
 ## YouTube video showing the game in action:
-    [https://www.youtube.com/watch?v=6i2IAnoEGu8]
+[https://www.youtube.com/watch?v=6i2IAnoEGu8](https://www.youtube.com/watch?v=6i2IAnoEGu8)
